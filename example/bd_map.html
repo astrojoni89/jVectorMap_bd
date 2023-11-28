@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>jVectorMap Bangladesh demo</title>
+    <link rel="stylesheet" href="css/jquery-jvectormap-205.css" type="text/css" media="screen" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="js/jquery-jvectormap-205.min.js"></script>
+    <script src="js/jquery-jvectormap-bd-merc.js"></script>
+</head>
+
+<body>
+    <div id="bd-map" style="width: 100vw; height: 400px"></div>
+    <script>
+        var crval1_0 = 88.00856, crval1_1 = 92.67937; // longitudes reference
+        var crval2_0 = 20.75338, crval2_1 = 26.63370; // latitudes reference
+        var crpix1_0 = 0, crpix1_1 = 1000; // give x size
+        var crpix2_0 = 0, crpix2_1 = 1259; // give y size
+        var sl_lng = Math.abs(crpix1_1 - crpix1_0) / Math.abs(crval1_1 - crval1_0);
+        var sl_lat = Math.abs(crpix2_1 - crpix2_0) / Math.abs(crval2_1 - crval2_0);
+
+        $(function () {
+            var coords_list = [
+                { name: "Dhaka", coords: [23.80063187825654, 90.41488248153054], loc: "City", status: "capital" },
+                { name: "Chittagong", coords: [22.364380602215853, 91.82453021396508], loc: "City", status: "second_largest_city" },
+            ];
+
+            new jvm.Map({
+                container: $('#bd-map'),
+                map: 'bd_merc',
+                regionStyle: {
+                    initial: {
+                        fill: '#008562', // 006A4E fallback
+                    }
+                },
+                markerStyle: {
+                    initial: {
+                        fill: '#f35a6c', // F42A41 fallback
+                        r: 7.5
+                    },
+                },
+                backgroundColor: '#e0e0e0',
+                markers: coords_list.map(function (h) { return { name: h.name, coords: get_px_coords(sl_lng, sl_lat, crval1_0, crval2_0, crpix2_1, h.coords) } }),
+                onRegionTipShow: function (event, label, index) {
+                    label.html(
+                        '<span style="font-size: 16pt;"><b>' + label.html() + '</b></span></br>' +
+                        '<span style="font-size: 16pt;">Division</span></br>'
+                    );
+                },
+                onMarkerTipShow: function (event, label, index) {
+                    label.html(
+                        '<span style="font-size: 16pt;"><b>' + label.html() + '</b></span></br>' +
+                        '<span style="font-size: 16pt;">' + coords_list[index].loc + '</span>'
+                    );
+                },
+                series: {
+                    markers: [{
+                        scale: {
+                            'capital': '#f2dd46',
+                            'second_largest_city': '#f35a6c',
+                        },
+                        values: coords_list.reduce(function (p, c, i) { p[i] = c.status; return p }, {}),
+                        legend: {
+                            //title: 'Standorte',
+                            vertical: true,
+                            labelRender: function (v) {
+                                return {
+                                    capital: 'Capital',
+                                    second_largest_city: '2nd largest city',
+                                }[v];
+                            }
+                        }
+                    }]
+                }
+            });
+        });
+        function get_px_coords(sl_lng, sl_lat, ref_lng, ref_lat, crpix_lat, coord_list) {
+            var lng_px = sl_lng * (coord_list[1] - ref_lng);
+            var lat_px = -sl_lat * (coord_list[0] - ref_lat) + crpix_lat;
+            return [lng_px, lat_px];
+        };
+    </script>
+</body>
+
+</html>
+
+
