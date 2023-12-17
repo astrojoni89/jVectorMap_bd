@@ -12,10 +12,10 @@
 <body>
     <div id="bd-map" style="width: 100vw; height: 400px"></div>
     <script>
-        var crval1_0 = 88.00856, crval1_1 = 92.67937; // longitudes reference
-        var crval2_0 = 20.75338, crval2_1 = 26.63370; // latitudes reference
-        var crpix1_0 = 0, crpix1_1 = 1000; // give x size
-        var crpix2_0 = 0, crpix2_1 = 1391; // give y size
+        var crval1_0 = 88.00856, crval1_1 = 92.67937; // longitudes reference at crpix1_*
+        var crval2_0 = 20.75338, crval2_1 = 26.63370; // latitudes reference at crpix2_*
+        var crpix1_0 = 0, crpix1_1 = 1000; // give x size of map specified in jquery-jvectormap-bd-merc.js
+        var crpix2_0 = 0, crpix2_1 = 1391; // give y size of map specified in jquery-jvectormap-bd-merc.js
         var sl_lng = Math.abs(crpix1_1 - crpix1_0) / Math.abs(crval1_1 - crval1_0);
         var sl_lat = Math.abs(crpix2_1 - crpix2_0) / Math.abs(crval2_1 - crval2_0);
 
@@ -26,16 +26,16 @@
             ];
 
             new jvm.Map({
-                container: $('#bd-map'),
-                map: 'bd_merc', // give it the jVectorMap name specified in *bd-merc.js
+                container: $('#bd-map'), // refer to map id in l.13
+                map: 'bd_merc', // give it the jVectorMap name specified in jquery-jvectormap-bd-merc.js
                 regionStyle: {
                     initial: {
-                        fill: '#008562', // 006A4E fallback
+                        fill: '#008562',
                     }
                 },
                 markerStyle: {
                     initial: {
-                        fill: '#f35a6c', // F42A41 fallback
+                        fill: '#f35a6c',
                         r: 7.5
                     },
                 },
